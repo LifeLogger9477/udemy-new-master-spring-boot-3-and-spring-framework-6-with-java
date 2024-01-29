@@ -19,11 +19,12 @@ public class UserDaoService {
   // 1. UserDaoService > Static List
   private static List<User> users = new ArrayList<>();
 
+  private static Integer usersCount = 0;
   static {
 
     users.add(
         new User(
-            1,
+            ++usersCount,
             "Adam",
             LocalDate.now().minusYears( 30 )
         )
@@ -31,7 +32,7 @@ public class UserDaoService {
 
     users.add(
         new User(
-            2,
+            ++usersCount,
             "Eve",
             LocalDate.now().minusYears( 25 )
         )
@@ -39,7 +40,7 @@ public class UserDaoService {
 
     users.add(
         new User(
-            3,
+            ++usersCount,
             "Jim",
             LocalDate.now().minusYears( 20 )
         )
@@ -55,5 +56,13 @@ public class UserDaoService {
 
     Predicate<? super User> predicate = user -> user.getId().equals( id );
     return users.stream().filter( predicate ).findFirst().get();
+  }
+
+  public User save(User user) {
+
+    user.setId( ++usersCount );
+    users.add( user );
+
+    return user;
   }
 }
