@@ -1,7 +1,10 @@
 package com.in28minutes.rest.webservices.restfulwebservices.user;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 
 /**
@@ -31,8 +34,18 @@ public class UserResource {
   }
 
   @PostMapping (path = "/users")
-  public void createUser(@RequestBody User user) {
+  public ResponseEntity<User> createUser(@RequestBody User user) {
 
-    service.save( user );
+    User savedUser = service.save( user );
+
+    // location - /users/4
+    // /users/4 => /users/{id}, user.getId() 이렇게 변경하면..
+    URI location = ServletUriComponentsBuilder
+        .fromCurrentRequest()
+        .path( "/{id}" )
+        .buildAndExpand( savedUser.getId() )
+        .toUri();
+
+    return ResponseEntity.created( location ).build();
   }
 }
